@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { returnJson } from './returnJson.interface';
+import { Register, Login, returnJson } from './returnJson.interface';
 
 @Injectable()
 export class AppService {
@@ -10,6 +10,20 @@ export class AppService {
     return {
       name: '小黄',
       mobile: 4542464415,
+    };
+  }
+  register(params): Register {
+    return {
+      name: params.name,
+      gender: params.gender,
+      mobile: params.mobile,
+      password: params.password,
+    };
+  }
+  login(params): Login {
+    return {
+      mobile: params.mobile,
+      password: params.password,
     };
   }
 }

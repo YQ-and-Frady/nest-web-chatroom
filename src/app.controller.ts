@@ -1,6 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { returnJson } from './returnJson.interface';
+import { Register, Login, returnJson } from './returnJson.interface';
 
 @Controller()
 export class AppController {
@@ -14,5 +14,17 @@ export class AppController {
   @Get('/get-json')
   getJoin(): returnJson {
     return this.appService.getJson();
+  }
+
+  @Post('/register')
+  @HttpCode(200)
+  register(@Body() params: Register): Register {
+    return this.appService.register(params);
+  }
+
+  @Post('/login')
+  @HttpCode(200)
+  login(@Body() params: Login): Login {
+    return this.appService.login(params);
   }
 }
