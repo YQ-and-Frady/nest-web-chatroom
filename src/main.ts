@@ -6,10 +6,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // 配置swagger
   const options = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('nest-web-chatroom api')
+    .setDescription('The nest-web-chatroom API description')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('nest-web-chatroom')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
