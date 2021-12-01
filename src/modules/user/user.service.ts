@@ -1,13 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  ILoginRequest,
-  ILoginResponse,
-  IRegisterRequest,
-} from './user.interface';
-// import { Connection } from 'typeorm';
+import { ILoginRequest, IRegisterRequest } from './user.interface';
 import { UserEntity } from './user.entity';
 import { USER_REPOSITORY } from '../../constants';
 import { Repository } from 'typeorm';
+import { IUserLoginResponse } from '../../libs/response/user';
 
 @Injectable()
 export class UserService {
@@ -17,12 +13,13 @@ export class UserService {
   ) {}
 
   async register(params: IRegisterRequest): Promise<any> {
-    console.log('user register: ', params);
     return this.userRepository.insert(params);
   }
-  login(params: ILoginRequest): ILoginResponse {
+
+  login(params: ILoginRequest): IUserLoginResponse {
     return {
       token: params.password,
+      mobile: '',
     };
   }
 }
