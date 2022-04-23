@@ -11,7 +11,7 @@ export class UserEntity implements IRegisterRequest {
   @Column()
   openid: string;
 
-  @ApiProperty({ description: '手机号' })
+  @ApiProperty({ description: '手机号1' })
   @Column()
   mobile: string;
 }
