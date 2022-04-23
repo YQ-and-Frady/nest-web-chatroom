@@ -1,8 +1,11 @@
+import { UserRegisterStatus } from '../../modules/user/user.enum';
+
 export interface IUserLoginResponse {
-  token: string;
-  mobile: string;
+  registerStatus: UserRegisterStatus;
+  openid: string;
 }
 
 export interface IUserRegisterResponse {
-  //
+  token: string;
+  mobile: string;
 }

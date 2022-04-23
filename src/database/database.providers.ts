@@ -7,11 +7,11 @@ export const databaseProviders = [
     useFactory: async () =>
       await createConnection({
         type: 'mysql',
-        host: 'localhost',
+        host: '101.33.209.79',
         port: 3306,
         username: 'yaqing',
-        password: '123456',
-        database: 'web_chatroom',
+        password: 'kActGN7WnziwhrLN',
+        database: 'webchatroom',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
       }),

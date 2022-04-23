@@ -7,19 +7,11 @@ export class UserEntity implements IRegisterRequest {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ description: '用户名' })
+  @ApiProperty({ description: 'openid' })
   @Column()
-  username: string;
-
-  @ApiProperty({ description: '性别' })
-  @Column()
-  gender: string;
+  openid: string;
 
   @ApiProperty({ description: '手机号' })
   @Column()
   mobile: string;
-
-  @ApiProperty({ description: '密码' })
-  @Column()
-  password: string;
 }

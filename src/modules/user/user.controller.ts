@@ -7,6 +7,8 @@ import {
   IUserLoginResponse,
   IUserRegisterResponse,
 } from '../../libs/response/user';
+import { UserEntity } from './user.entity';
+import { UserRegisterStatus } from './user.enum';
 
 @Controller('user')
 export class UserController {
@@ -23,7 +25,25 @@ export class UserController {
   @ApiOperation({ summary: '登录' })
   @Post('/login')
   @HttpCode(200)
-  login(@Body() form: LoginDto): Promise<IHttpResponse<IUserLoginResponse>> {
-    return this.userService.login(form);
+  async login(@Body() loginDto: LoginDto): Promise<IUserLoginResponse> {
+    const { openid } = await this.userService.getInfoFromWx(loginDto.js_code);
+    let user: UserEntity;
+    try {
+      user = await this.userService.userFindOneOrFail(openid);
+    } catch (e) {
+      await this.userService.creatUser(openid);
+      user = await this.userService.userFindOneOrFail(openid);
+    }
+    if (user.mobile) {
+      return {
+        registerStatus: UserRegisterStatus.Register,
+        openid: user.openid,
+      };
+    } else {
+      return {
+        registerStatus: UserRegisterStatus.NeedMobile,
+        openid: user.openid,
+      };
+    }
   }
 }
