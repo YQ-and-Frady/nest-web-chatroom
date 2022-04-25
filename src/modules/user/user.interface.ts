@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
 import { IsNotEmpty } from 'class-validator';
 
 export interface IRegisterRequest {
@@ -23,4 +22,9 @@ export class LoginDto implements ILoginRequest {
   @ApiProperty({ description: 'js_code' })
   @IsNotEmpty()
   readonly js_code: string;
+}
+
+export interface IJWTSavedInfo {
+  id: number;
+  openid: string;
 }

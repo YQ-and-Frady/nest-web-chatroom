@@ -9,23 +9,17 @@ import {
 } from '../../libs/response/user';
 import { UserEntity } from './user.entity';
 import { UserRegisterStatus } from './user.enum';
+import { successResponse } from '../../utils/ro-builder.util';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @ApiOperation({ summary: '注册用户' })
-  @Post('/register')
-  @HttpCode(200)
-  async register(
-    @Body() form: RegisterDto,
-  ): Promise<IHttpResponse<IUserRegisterResponse>> {
-    return await this.userService.register(form);
-  }
-
   @ApiOperation({ summary: '登录' })
   @Post('/login')
   @HttpCode(200)
-  async login(@Body() loginDto: LoginDto): Promise<IUserLoginResponse> {
+  async login(
+    @Body() loginDto: LoginDto,
+  ): Promise<IHttpResponse<IUserLoginResponse>> {
     const { openid } = await this.userService.getInfoFromWx(loginDto.js_code);
     let user: UserEntity;
     try {
@@ -34,16 +28,23 @@ export class UserController {
       await this.userService.creatUser(openid);
       user = await this.userService.userFindOneOrFail(openid);
     }
-    if (user.mobile) {
-      return {
-        registerStatus: UserRegisterStatus.Register,
+    return successResponse(
+      {
+        registerStatus: user.mobile
+          ? UserRegisterStatus.Register
+          : UserRegisterStatus.NeedMobile,
         openid: user.openid,
-      };
-    } else {
-      return {
-        registerStatus: UserRegisterStatus.NeedMobile,
-        openid: user.openid,
-      };
-    }
+      },
+      '',
+    );
+  }
+
+  @Post('/register')
+  @HttpCode(200)
+  async register(
+    @Body() registerDto: RegisterDto,
+  ): Promise<IHttpResponse<IUserRegisterResponse>> {
+    await this.userService.updateUser(registerDto);
+    return successResponse({ token: '' }, '注册成功');
   }
 }

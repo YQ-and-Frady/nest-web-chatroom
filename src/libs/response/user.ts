@@ -7,5 +7,6 @@ export interface IUserLoginResponse {
 
 export interface IUserRegisterResponse {
   token: string;
-  mobile: string;
+  mobile?: string;
+  openid?: string;
 }

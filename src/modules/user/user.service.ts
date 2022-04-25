@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ILoginRequest, IRegisterRequest } from './user.interface';
+import { IRegisterRequest, RegisterDto } from './user.interface';
 import { UserEntity } from './user.entity';
 import { USER_REPOSITORY } from '../../constants';
 import { Repository } from 'typeorm';
-import { IUserLoginResponse } from '../../libs/response/user';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 
@@ -19,6 +18,10 @@ export class UserService {
     return this.userRepository.insert(params);
   }
 
+  /**
+   * 从微信获取登录信息
+   * @param js_code
+   */
   async getInfoFromWx(js_code: string): Promise<any> {
     const response = await lastValueFrom(
       this.httpService.get('https://api.weixin.qq.com/sns/jscode2session', {
@@ -33,16 +36,44 @@ export class UserService {
     return response.data;
   }
 
+  /**
+   * 查找用户信息（或报错）
+   * @param openid
+   */
   async userFindOneOrFail(openid: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({ openid });
     if (!user) {
-      throw '报错了';
+      throw new Error('报错了');
     }
     return user;
   }
 
+  /**
+   * 创建用户
+   * @param openid
+   */
   async creatUser(openid: string): Promise<void> {
     const user = this.userRepository.create({ openid, mobile: '' });
     await this.userRepository.save(user);
   }
+
+  /**
+   * 更新用户
+   * @param registerDto
+   */
+  async updateUser(registerDto: RegisterDto): Promise<void> {
+    try {
+      const user = await this.userFindOneOrFail(registerDto.openid);
+      user.mobile = registerDto.mobile;
+      await this.userRepository.update(user.id, user);
+    } catch (e) {
+      throw new Error('找不到openid');
+    }
+  }
+
+  // generateJWT(jwtSavedInfo: IJWTSavedInfo): string {
+  //   return this.jwt.sign(jwtSavedInfo, config.secret, {
+  //     expiresIn: config.expiresIn
+  //   })
+  // }
 }
