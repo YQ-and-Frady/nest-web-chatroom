@@ -8,7 +8,11 @@ export class UserEntity implements IRegisterRequest {
   id: number;
 
   @ApiProperty({ description: 'openid' })
-  @Column()
+  @Column({
+    length: 191,
+    unique: true,
+    name: 'open_id',
+  })
   openid: string;
 
   @ApiProperty({ description: '手机号' })

@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IRegisterRequest, RegisterDto } from './user.interface';
+import { IJWTSavedInfo, IRegisterRequest, RegisterDto } from './user.interface';
 import { UserEntity } from './user.entity';
 import { USER_REPOSITORY } from '../../constants';
 import { Repository } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UserService {
@@ -71,9 +72,21 @@ export class UserService {
     }
   }
 
-  // generateJWT(jwtSavedInfo: IJWTSavedInfo): string {
-  //   return this.jwt.sign(jwtSavedInfo, config.secret, {
-  //     expiresIn: config.expiresIn
-  //   })
-  // }
+  /**
+   * 删除用户
+   * @param userDto
+   */
+  async deleteUser(id: number): Promise<void> {
+    try {
+      await this.userRepository.delete(id);
+    } catch (e) {
+      throw new Error('找不到对应用户');
+    }
+  }
+
+  generateJWT(jwtSavedInfo: IJWTSavedInfo): string {
+    return jwt.sign(jwtSavedInfo, 'chat-room', {
+      expiresIn: '24h',
+    });
+  }
 }

@@ -2,7 +2,7 @@ import { UserRegisterStatus } from '../../modules/user/user.enum';
 
 export interface IUserLoginResponse {
   registerStatus: UserRegisterStatus;
-  openid: string;
+  token: string;
 }
 
 export interface IUserRegisterResponse {

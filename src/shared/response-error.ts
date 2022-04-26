@@ -1,6 +1,6 @@
 import { ResponseCode } from '../libs/response-code';
 
-export class ResponseError extends Error{
+export class ResponseError extends Error {
   code: ResponseCode;
   message: string;
   data: any;
@@ -8,6 +8,6 @@ export class ResponseError extends Error{
     super();
     this.code = code;
     this.message = message;
-    this.data = data
+    this.data = data;
   }
 }
